@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 320px;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .status.active {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .info p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 10px;
+            background: #007acc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .button:hover {
+            background: #005a9e;
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #999;
+            font-size: 11px;
+        }
+
+        .iframe-list {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background: white;
+        }
+
+        .iframe-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .iframe-item:last-child {
+            border-bottom: none;
+        }
+
+        .iframe-url {
+            font-size: 11px;
+            color: #666;
+            word-break: break-all;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .download-btn {
+            padding: 4px 8px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗂️ Srikandi Downloader</h1>
+    </div>
+    
+    <div id="status" class="status inactive">
+        Mengecek status...
+    </div>
+    
+    <div class="info">
+        <h3>ℹ️ Informasi</h3>
+        <p>Ekstensi ini akan aktif di halaman:</p>
+        <p><strong>srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/*</strong></p>
+        <p>Tombol download akan muncul di setiap iframe yang berisi file dari S3.</p>
+    </div>
+    
+    <div id="iframeSection" style="display: none;">
+        <div class="info">
+            <h3>📄 File Terdeteksi</h3>
+            <div id="iframeList" class="iframe-list">
+                <!-- Iframe list akan dimuat di sini -->
+            </div>
+        </div>
+    </div>
+    
+    <button id="scanButton" class="button">🔍 Scan Ulang</button>
+    
+    <div class="footer">
+        v1.0 - Srikandi File Downloader
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusDiv = document.getElementById('status');
+            const scanButton = document.getElementById('scanButton');
+            const iframeSection = document.getElementById('iframeSection');
+            const iframeList = document.getElementById('iframeList');
+            
+            // Fungsi untuk mengecek status halaman
+            function checkPageStatus() {
+                chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                    const currentTab = tabs[0];
+                    const url = currentTab.url;
+                    
+                    if (url && url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/')) {
+                        statusDiv.textContent = '✅ Ekstensi Aktif';
+                        statusDiv.className = 'status active';
+                        scanButton.disabled = false;
+                        scanForIframes(currentTab.id);
+                    } else {
+                        statusDiv.textContent = '❌ Halaman Tidak Didukung';
+                        statusDiv.className = 'status inactive';
+                        scanButton.disabled = true;
+                        iframeSection.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Fungsi untuk scan iframe
+            function scanForIframes(tabId) {
+                chrome.tabs.sendMessage(tabId, {action: 'getIframes'}, function(response) {
+                    if (response && response.iframes && response.iframes.length > 0) {
+                        displayIframes(response.iframes);
+                        iframeSection.style.display = 'block';
+                    } else {
+                        iframeSection.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Fungsi untuk menampilkan daftar iframe
+            function displayIframes(iframes) {
+                iframeList.innerHTML = '';
+                
+                iframes.forEach((iframe, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'iframe-item';
+                    
+                    const urlDiv = document.createElement('div');
+                    urlDiv.className = 'iframe-url';
+                    
+                    // Ekstrak nama file yang lebih baik
+                    try {
+                        const urlObj = new URL(iframe.url);
+                        const pathname = urlObj.pathname;
+                        const rawFileName = pathname.split('/').pop() || 'document.pdf';
+                        const decodedFileName = decodeURIComponent(rawFileName);
+                        urlDiv.textContent = decodedFileName.length > 30 ? 
+                            decodedFileName.substring(0, 30) + '...' : decodedFileName;
+                        urlDiv.title = decodedFileName; // Tooltip dengan nama lengkap
+                    } catch (e) {
+                        urlDiv.textContent = 'document.pdf';
+                    }
+                    
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.className = 'download-btn';
+                    downloadBtn.textContent = '📥';
+                    downloadBtn.title = 'Download file';
+                    downloadBtn.onclick = function() {
+                        this.textContent = '⏳';
+                        this.disabled = true;
+                        
+                        chrome.runtime.sendMessage({
+                            action: 'downloadFile',
+                            url: iframe.url
+                        }, (response) => {
+                            setTimeout(() => {
+                                this.textContent = '📥';
+                                this.disabled = false;
+                                
+                                if (response && response.success) {
+                                    this.textContent = '✅';
+                                    setTimeout(() => {
+                                        this.textContent = '📥';
+                                    }, 2000);
+                                } else {
+                                    this.textContent = '❌';
+                                    setTimeout(() => {
+                                        this.textContent = '📥';
+                                    }, 2000);
+                                }
+                            }, 500);
+                        });
+                    };
+                    
+                    item.appendChild(urlDiv);
+                    item.appendChild(downloadBtn);
+                    iframeList.appendChild(item);
+                });
+            }
+            
+            // Event listener untuk tombol scan
+            scanButton.addEventListener('click', function() {
+                checkPageStatus();
+            });
+            
+            // Jalankan pengecekan saat popup dibuka
+            checkPageStatus();
+        });
+    </script>
+</body>
+</html>
