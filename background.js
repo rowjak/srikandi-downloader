@@ -72,9 +72,24 @@ async function downloadFileFromS3(url) {
 }
 
 // Event listener untuk mengecek status ekstensi
+// chrome.action.onClicked.addListener((tab) => {
+//     // Cek apakah ekstensi aktif di tab saat ini
+//     if (tab.url && tab.url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/')) {
+//         chrome.tabs.sendMessage(tab.id, { action: 'checkIframes' });
+//     } else {
+//         // Tampilkan notifikasi jika tidak di halaman yang tepat
+//         chrome.notifications.create({
+//             type: 'basic',
+//             iconUrl: 'icon48.png',
+//             title: 'Srikandi Downloader',
+//             message: 'Ekstensi ini hanya aktif di halaman tandatangan naskah Srikandi'
+//         });
+//     }
+// });
+
 chrome.action.onClicked.addListener((tab) => {
     // Cek apakah ekstensi aktif di tab saat ini
-    if (tab.url && tab.url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/')) {
+    if (tab.url && (tab.url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/') || tab.url.includes('srikandi.arsip.go.id/penerimaan-naskah-masuk/naskah-dinas-masuk/'))) {
         chrome.tabs.sendMessage(tab.id, { action: 'checkIframes' });
     } else {
         // Tampilkan notifikasi jika tidak di halaman yang tepat
@@ -82,7 +97,7 @@ chrome.action.onClicked.addListener((tab) => {
             type: 'basic',
             iconUrl: 'icon48.png',
             title: 'Srikandi Downloader',
-            message: 'Ekstensi ini hanya aktif di halaman tandatangan naskah Srikandi'
+            message: 'Ekstensi ini hanya aktif di halaman tandatangan naskah atau naskah dinas masuk Srikandi'
         });
     }
 });

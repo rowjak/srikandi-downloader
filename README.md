@@ -25,7 +25,7 @@ Ekstensi ini memungkinkan Anda mengunduh file surat keluar yang berada di dalam 
 ## 📖 Cara Penggunaan
 
 ### Otomatis (Direkomendasikan)
-1. Buka halaman Srikandi: `https://srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/***`
+1. Buka halaman Srikandi: Naskah Keluar/ Naskah Masuk
 2. Ekstensi akan otomatis mendeteksi iframe dengan file S3
 3. Tombol "📥 Unduh File" akan muncul di pojok kanan atas setiap iframe
 4. Klik tombol untuk mengunduh file
@@ -40,8 +40,8 @@ Ekstensi ini memungkinkan Anda mengunduh file surat keluar yang berada di dalam 
 ## ⚙️ Spesifikasi Teknis
 
 ### URL yang Didukung
-- Halaman: `https://srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/*`
-- File: `https://s3.arsip.go.id/srikandi-prod/naskah-dinas-keluar/*`
+- Halaman: Naskah Keluar/ Naskah Masuk
+- File: `https://s3.arsip.go.id/srikandi-prod/*`
 
 ### Permissions
 - `activeTab`: Untuk akses halaman aktif
@@ -67,7 +67,7 @@ Jika muncul error ini di console:
 ### URL dengan Parameter AWS S3
 Contoh URL yang didukung:
 ```
-https://s3.arsip.go.id/srikandi-prod/naskah-dinas-keluar/....
+https://s3.arsip.go.id/srikandi-prod/....
 ```
 
 Ekstensi akan otomatis:
@@ -77,7 +77,7 @@ Ekstensi akan otomatis:
 
 ### Ekstensi Tidak Aktif
 - Pastikan Anda berada di halaman yang benar
-- Cek apakah URL mengandung `/pembuatan-naskah-keluar/tandatangan-naskah/`
+- Cek apakah anda sudah berada pada detail Halaman Naskah Keluar/ Naskah Masuk
 - Refresh halaman dan coba lagi
 
 ### Tombol Download Tidak Muncul

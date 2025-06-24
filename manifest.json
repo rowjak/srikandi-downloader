@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Srikandi File Downloader",
   "version": "1.0",
-  "description": "Ekstensi untuk mengunduh file dari iframe di website Srikandi Arsip",
+  "description": "Ekstensi untuk mengunduh file Surat Masuk dan Surat Keluar dari iframe di website Srikandi Arsip",
   "permissions": [
     "activeTab",
     "downloads"
@@ -13,7 +13,10 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/*"],
+      "matches": [
+        "https://srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/*", 
+        "https://srikandi.arsip.go.id/penerimaan-naskah-masuk/naskah-dinas-masuk/*"
+      ],
       "js": ["content.js"],
       "run_at": "document_end"
     }

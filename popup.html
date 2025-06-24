@@ -151,7 +151,7 @@
     <div class="info">
         <h3>ℹ️ Informasi</h3>
         <p>Ekstensi ini akan aktif di halaman:</p>
-        <p><strong>srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/*</strong></p>
+        <p><strong>naskah keluar/ naskah masuk</strong></p>
         <p>Tombol download akan muncul di setiap iframe yang berisi file dari S3.</p>
     </div>
     
@@ -178,12 +178,31 @@
             const iframeList = document.getElementById('iframeList');
             
             // Fungsi untuk mengecek status halaman
+            // function checkPageStatus() {
+            //     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            //         const currentTab = tabs[0];
+            //         const url = currentTab.url;
+                    
+            //         if (url && url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/')) {
+            //             statusDiv.textContent = '✅ Ekstensi Aktif';
+            //             statusDiv.className = 'status active';
+            //             scanButton.disabled = false;
+            //             scanForIframes(currentTab.id);
+            //         } else {
+            //             statusDiv.textContent = '❌ Halaman Tidak Didukung';
+            //             statusDiv.className = 'status inactive';
+            //             scanButton.disabled = true;
+            //             iframeSection.style.display = 'none';
+            //         }
+            //     });
+            // }
+
             function checkPageStatus() {
-                chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                     const currentTab = tabs[0];
                     const url = currentTab.url;
-                    
-                    if (url && url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/')) {
+
+                    if (url && (url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/') || url.includes('srikandi.arsip.go.id/penerimaan-naskah-masuk/naskah-dinas-masuk/'))) {
                         statusDiv.textContent = '✅ Ekstensi Aktif';
                         statusDiv.className = 'status active';
                         scanButton.disabled = false;

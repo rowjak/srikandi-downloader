@@ -25,7 +25,7 @@
         
         iframes.forEach(iframe => {
             const src = iframe.src;
-            if (src && src.includes('s3.arsip.go.id/srikandi-prod/naskah-dinas-keluar/')) {
+            if (src && src.includes('s3.arsip.go.id/srikandi-prod')) {
                 s3Iframes.push({
                     element: iframe,
                     url: src
