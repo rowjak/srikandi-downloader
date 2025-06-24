@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/*", 
+        "https://srikandi.arsip.go.id/pembuatan-naskah-keluar/*", 
         "https://srikandi.arsip.go.id/penerimaan-naskah-masuk/naskah-dinas-masuk/*"
       ],
       "js": ["content.js"],

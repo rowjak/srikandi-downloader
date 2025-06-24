@@ -89,7 +89,7 @@ async function downloadFileFromS3(url) {
 
 chrome.action.onClicked.addListener((tab) => {
     // Cek apakah ekstensi aktif di tab saat ini
-    if (tab.url && (tab.url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/tandatangan-naskah/') || tab.url.includes('srikandi.arsip.go.id/penerimaan-naskah-masuk/naskah-dinas-masuk/'))) {
+    if (tab.url && (tab.url.includes('srikandi.arsip.go.id/pembuatan-naskah-keluar/') || tab.url.includes('srikandi.arsip.go.id/penerimaan-naskah-masuk/naskah-dinas-masuk/'))) {
         chrome.tabs.sendMessage(tab.id, { action: 'checkIframes' });
     } else {
         // Tampilkan notifikasi jika tidak di halaman yang tepat
